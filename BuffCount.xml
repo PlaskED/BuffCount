@@ -1,0 +1,20 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="BuffCount.lua"/>
+	<Frame name="BuffCountFrame" hidden="true">
+		<Scripts>
+			<OnLoad>
+				BuffCount_OnLoad();
+			</OnLoad>
+			<OnEvent>
+				BuffCount_OnEvent();
+			</OnEvent>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>

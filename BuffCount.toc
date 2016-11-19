@@ -1,0 +1,9 @@
+## Interface: 11200
+## |c66CD00Buff Counter v1.2 by Plask
+## Version: 1.2
+## Author: Plask
+## SavedVariables: BUFFCOUNT_CONFIG
+## Notes: Counts and shows your amount of buffs
+BuffCount.lua
+BuffCount.xml
+BuffCountWindow.xml
