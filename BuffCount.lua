@@ -1,6 +1,7 @@
 local BC_PlayerName = nil;
 local BC_DEFAULT = {"FRAMELOCK" = false, "VISIBLE" = true, };
 local BuffCap = 32;
+local HiddenBuffs = 0;
 local ValidDebuff = { "DEATH_WISH" = true, };
 
 function BuffCount_OnLoad()
@@ -26,6 +27,12 @@ function BuffCount_Init()
    BC_PlayerName = UnitName("player").." of "..GetCVar("realmName");
    BuffCountText:SetTextColor(0.0,1.0,0.0,1.0)
    BuffCountWindow:SetAlpha(0.8)
+
+   local _,class = UnitClass("player");
+   -- Warrior stances counts as buffs
+   if class == "WARRIOR" then
+      HiddenBuffs = 1;
+   end;
    
    DEFAULT_CHAT_FRAME:AddMessage('Buff Counter v1.3, by Plask. Use /bc for available commands', 0.35, 1, 0.35);
    
@@ -120,6 +127,7 @@ function Count_Buffs()
       i = i + 1;
       debuff = UnitDebuff("player", i);
    end;
+   count = count + HiddenBuffs;
    Update_Window(count);
 end;
 
