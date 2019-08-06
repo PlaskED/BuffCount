@@ -121,7 +121,7 @@ function Count_Buffs()
    local debuff = UnitDebuff("player", i);
    while debuff do
       local debuff_name = select(1, ...)
-      if ValidDebuff[debuff_name] then
+      if ValidDebuff.debuff_name then
 	 count = count + 1;
       end;
       i = i + 1;
