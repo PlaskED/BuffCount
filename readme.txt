@@ -1,4 +1,4 @@
-Buff Count v1.0
+Buff Count v1.2
 Author: Plask
 
 version 1.2
