@@ -15,11 +15,3 @@ Toggle locking/unlocking of the BuffCount window
 ```
 \bc lock
 ```
-Set the buff limit to Fury Warrior Preset
-```
-\bc fury
-```
-Set the buff limit to Protection Warrior Preset
-```
-\bc prot
-```
