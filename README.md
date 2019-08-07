@@ -15,3 +15,15 @@ Toggle locking/unlocking of the BuffCount window
 ```
 \bc lock
 ```
+Reset all settings
+```
+\bc rest
+```
+Configure BuffCount window
+```
+\bc bg (alpha|color|size) [args..]
+```
+Configure font
+```
+\bc font (alpha|color|size|family) [args..]
+```
