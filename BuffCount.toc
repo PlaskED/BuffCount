@@ -1,5 +1,5 @@
 ## Interface: 11302
-## Title: |c66CD00Buff Counter by Plask
+## Title: BuffCount
 ## Version: 1.3
 ## Author: Plask
 ## SavedVariables: BUFFCOUNT_CONFIG

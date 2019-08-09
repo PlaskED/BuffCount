@@ -1,24 +1,24 @@
 local BC_PlayerName = nil;
 local BC_DEFAULT = {
-   "FRAMELOCK" = false,
-   "VISIBLE" = true,
-   "BG_ALPHA" = 0.25,
-   "BG_COLOR" = {"r"=1, "g"=1, "b"=1},
-   "BG_SIZE" = {"x"=55, "y"=40},
-   "FONT_ALPHA" = 1.0,
-   "FONT_COLOR" = {"r"=1, "g"=1, "b"=1},
-   "FONT_SIZE" = 30,
-   "FONT_FAMILY" = "FONTS\\ARIALN.TTF",
+   ["FRAMELOCK"] = false,
+   ["VISIBLE"] = true,
+   ["BG_ALPHA"] = 0.25,
+   ["BG_COLOR"]= {["r"]=1, ["g"]=1, ["b"]=1},
+   ["BG_SIZE"] = {["x"]=55, ["y"]=40},
+   ["FONT_ALPHA"] = 1.0,
+   ["FONT_COLOR"] = {["r"]=1, ["g"]=1, ["b"]=1},
+   ["FONT_SIZE"] = 30,
+   ["FONT_FAMILY"] = "FONTS\\ARIALN.TTF",
 };
 local BC_FONT = {
-   "arial" = "Fonts\\ARIALN.TTF",
-   "friz" = "Fonts\\FRIZQT__.TTF",
-   "morpheus" = "Fonts\\MORPHEUS.TTF",
-   "skurri" = "Fonts\\SKURRI.TTF",
+   ["arial"] = "Fonts\\ARIALN.TTF",
+   ["friz"] = "Fonts\\FRIZQT__.TTF",
+   ["morpheus"] = "Fonts\\MORPHEUS.TTF",
+   ["skurri"] = "Fonts\\SKURRI.TTF",
 }
 local BuffCap = 32;
 local HiddenBuffs = 0;
-local ValidDebuff = { "DeathWish" = true, };
+local ValidDebuff = { ["DeathWish"] = true, };
 
 function BuffCount_OnLoad()
    this:RegisterEvent("UNIT_AURA");
@@ -44,7 +44,7 @@ function BuffCount_OnLoad()
 	    end;
 	 elseif arg == 'color' then
 	    if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_COLOR = {"r"=arg1, "g"=arg2, "b"=arg3};
+	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
 	       BuffCountWindow:SetBackdropColor(arg1, arg2, arg3);
 	    else
 	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg color r g b |cffffffff- Set color of window to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
@@ -52,7 +52,7 @@ function BuffCount_OnLoad()
 	 elseif arg == 'size' then
 	    if arg1 ~= "" and arg2 ~= "" then
 	       arg1, arg2 = tonumber(arg1), tonumber(arg2);
-	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_SIZE = {"x"=arg1, "y"=arg2};
+	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_SIZE = {["x"]=arg1, ["y"]=arg2};
 	       BuffCountWindow:SetSize(tonumber(arg1), tonumber(arg2));
 	    else
 	       	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg size x y |cffffffff- Set size of window to width 'x' and height 'y'. 'x' and 'y' should be positive integers", 0.35, 1, 0.35);
@@ -68,7 +68,7 @@ function BuffCount_OnLoad()
 	    end;
 	 elseif arg == 'color' then
 	    if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_COLOR = {"r"=arg1, "g"=arg2, "b"=arg3};
+	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
 	       BuffCountText:SetTextColor(arg1, arg2, arg3);
 	    else
 	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font color r g b |cffffffff- Set color of font to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
@@ -189,7 +189,7 @@ end;
 
 function BuffCount_OnEvent()
    if (event == "UNIT_AURA") then
-      local unit = select(1, ...)
+      local unit = select(1, event);
       if unit == "player" then 
 	 Count_Buffs();
       end;
@@ -213,7 +213,7 @@ function Count_Buffs()
    i = 0;
    local debuff = UnitDebuff("player", i);
    while debuff do
-      local debuff_name = select(1, ...)
+      local debuff_name = select(1, debuff);
       if ValidDebuff.debuff_name then
 	 count = count + 1;
       end;
