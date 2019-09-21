@@ -20,89 +20,90 @@ local BuffCap = 32;
 local HiddenBuffs = 0;
 local ValidDebuff = { ["DeathWish"] = true, };
 
-function BuffCount_OnLoad()
-   this:RegisterEvent("UNIT_AURA");
-   this:RegisterEvent("VARIABLES_LOADED");
-
-   SLASH_BC1 = '/bc';
-   local function handler(msg, editbox)
-      local cmd, arg, arg1, arg2, arg3 = strsplit(" ",msg)
-      if cmd == 'hide' then
-	 BuffCount_Visibility();
-      elseif cmd == 'lock' then
-	 BuffCount_ChangeLock();
-      elseif cmd == 'reset' then
-	 BUFFCOUNT_CONFIG[BC_PlayerName] = BC_DEFAULT;
-	 BuffCount_UpdateConfiguration();
-      elseif cmd == 'bg' then
-	 if arg == 'alpha' then
-	    if arg1 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_ALPHA = arg1;
-	       BuffCountWindow:SetAlpha(arg1);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg alpha x |cffffffff- Set alpha of window to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
-	    end;
-	 elseif arg == 'color' then
-	    if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
-	       BuffCountWindow:SetBackdropColor(arg1, arg2, arg3);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg color r g b |cffffffff- Set color of window to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
-	    end;
-	 elseif arg == 'size' then
-	    if arg1 ~= "" and arg2 ~= "" then
-	       arg1, arg2 = tonumber(arg1), tonumber(arg2);
-	       BUFFCOUNT_CONFIG[BC_PlayerName].BG_SIZE = {["x"]=arg1, ["y"]=arg2};
-	       BuffCountWindow:SetSize(tonumber(arg1), tonumber(arg2));
-	    else
-	       	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg size x y |cffffffff- Set size of window to width 'x' and height 'y'. 'x' and 'y' should be positive integers", 0.35, 1, 0.35);
-	    end;
-	 end;
-      elseif cmd == 'font' then
-	 if arg == 'alpha' then
-	    if arg1 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_ALPHA = arg1;
-	       BuffCountText:SetAlpha(arg1);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font alpha x |cffffffff- Set alpha of font to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
-	    end;
-	 elseif arg == 'color' then
-	    if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
-	       BuffCountText:SetTextColor(arg1, arg2, arg3);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font color r g b |cffffffff- Set color of font to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
-	    end;
-	 elseif arg == 'size' then
-	    if arg1 ~= "" then
-	       arg1 = tonumber(arg1);
-	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_SIZE = arg1;
-	       BuffCountText:SetTextHeight(arg1);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font size x |cffffffff- Set size of font to 'x'. 'x' should be a positive integer", 0.35, 1, 0.35);
-	    end;
-	 elseif arg == 'family' then
-	    arg1 = string.lower(arg1);
-	    if arg1 ~= "" and BC_FONT.arg1 then
-	       BUFFCOUNT_CONFIG[BC_PlayerName].FONT_FAMILY = arg1;
-	       BuffCountText:SetFont(BC_FONT.arg1, BUFFCOUNT_CONFIG.FONT_SIZE);
-	    else
-	       DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font family (arial|friz|morpheus|skurri) |cffffffff- Sets the family used", 0.35, 1, 0.35);
-	    end;
-	 end;
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font alpha x |cffffffff- Set alpha of window to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font color r g b |cffffffff- Set color of window to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font size x |cffffffff- Set size of window to 'x'. 'x' should be a positive integer", 0.35, 1, 0.35);
-      else
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc hide |cffffffff- toggle frame visible", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc lock |cffffffff- toggle frame lock", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg (alpha|color|size) [args] |cffffffff- Configure window", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font (alpha|color|size|family) [args] |cffffffff- Configure font", 0.35, 1, 0.35);
-	 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc reset |cffffffff- Reset to default settings", 0.35, 1, 0.35);
-      end;
+function BuffCount_OnLoad(self)
+	print("BuffCount_OnLoad() start");
+	BuffCountFrame:RegisterUnitEvent("UNIT_AURA","player");
+	BuffCountFrame:RegisterEvent("ADDON_LOADED","BuffCount");
+	SLASH_BC1 = '/bc';
+	local function handler(msg, editbox)
+	local cmd, arg, arg1, arg2, arg3 = strsplit(" ",msg)
+	if cmd == 'hide' then
+		BuffCount_Visibility();
+    elseif cmd == 'lock' then
+		BuffCount_ChangeLock();
+    elseif cmd == 'reset' then
+		BUFFCOUNT_CONFIG[BC_PlayerName] = BC_DEFAULT;
+		BuffCount_UpdateConfiguration();
+    elseif cmd == 'bg' then
+		if arg == 'alpha' then
+			if arg1 ~= "" then
+			   BUFFCOUNT_CONFIG[BC_PlayerName].BG_ALPHA = arg1;
+			   BuffCountWindow:SetAlpha(arg1);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg alpha x |cffffffff- Set alpha of window to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
+			end;
+		elseif arg == 'color' then
+			if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
+			   BUFFCOUNT_CONFIG[BC_PlayerName].BG_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
+			   BuffCountWindow:SetBackdropColor(arg1, arg2, arg3);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg color r g b |cffffffff- Set color of window to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
+			end;
+		elseif arg == 'size' then
+			if arg1 ~= "" and arg2 ~= "" then
+			   arg1, arg2 = tonumber(arg1), tonumber(arg2);
+			   BUFFCOUNT_CONFIG[BC_PlayerName].BG_SIZE = {["x"]=arg1, ["y"]=arg2};
+			   BuffCountWindow:SetSize(tonumber(arg1), tonumber(arg2));
+			else
+				 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg size x y |cffffffff- Set size of window to width 'x' and height 'y'. 'x' and 'y' should be positive integers", 0.35, 1, 0.35);
+			end;
+		end;
+	elseif cmd == 'font' then
+		if arg == 'alpha' then
+			if arg1 ~= "" then
+			   BUFFCOUNT_CONFIG[BC_PlayerName].FONT_ALPHA = arg1;
+			   BuffCountText:SetAlpha(arg1);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font alpha x |cffffffff- Set alpha of font to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
+			end;
+		elseif arg == 'color' then
+			if arg1 ~= "" and arg2 ~= "" and arg3 ~= "" then
+			   BUFFCOUNT_CONFIG[BC_PlayerName].FONT_COLOR = {["r"]=arg1, ["g"]=arg2, ["b"]=arg3};
+			   BuffCountText:SetTextColor(arg1, arg2, arg3);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font color r g b |cffffffff- Set color of font to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
+			end;
+		elseif arg == 'size' then
+			if arg1 ~= "" then
+			   arg1 = tonumber(arg1);
+			   BUFFCOUNT_CONFIG[BC_PlayerName].FONT_SIZE = arg1;
+			   BuffCountText:SetTextHeight(arg1);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font size x |cffffffff- Set size of font to 'x'. 'x' should be a positive integer", 0.35, 1, 0.35);
+			end;
+		elseif arg == 'family' then
+			arg1 = string.lower(arg1);
+			if arg1 ~= "" and BC_FONT.arg1 then
+			   BUFFCOUNT_CONFIG[BC_PlayerName].FONT_FAMILY = arg1;
+			   BuffCountText:SetFont(BC_FONT.arg1, BUFFCOUNT_CONFIG.FONT_SIZE);
+			else
+			   DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font family (arial|friz|morpheus|skurri) |cffffffff- Sets the family used", 0.35, 1, 0.35);
+			end;
+		end;
+		DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font alpha x |cffffffff- Set alpha of window to 'x'. 'x' should be in range 0-1", 0.35, 1, 0.35);
+		DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font color r g b |cffffffff- Set color of window to rgb. 'r', 'g' and 'b' should be in range 0-1", 0.35, 1, 0.35);
+		DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font size x |cffffffff- Set size of window to 'x'. 'x' should be a positive integer", 0.35, 1, 0.35);
+		else
+		 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc hide |cffffffff- toggle frame visible", 0.35, 1, 0.35);
+		 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc lock |cffffffff- toggle frame lock", 0.35, 1, 0.35);
+		 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc bg (alpha|color|size) [args] |cffffffff- Configure window", 0.35, 1, 0.35);
+		 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc font (alpha|color|size|family) [args] |cffffffff- Configure font", 0.35, 1, 0.35);
+		 DEFAULT_CHAT_FRAME:AddMessage("BuffCount Syntax: |cffffff00/bc reset |cffffffff- Reset to default settings", 0.35, 1, 0.35);
+		end;
    end;
    
    SlashCmdList["BC"] = handler;
+   print("BuffCount_OnLoad() end");
 end
 
 
@@ -118,10 +119,12 @@ function BuffCount_Init()
    DEFAULT_CHAT_FRAME:AddMessage('Buff Counter v1.3, by Plask. Use /bc for available commands', 0.35, 1, 0.35);
    
    if (BUFFCOUNT_CONFIG == nil) then
+	  print("config is nil, create empty");
       BUFFCOUNT_CONFIG = {};
    end;
    
    if (BUFFCOUNT_CONFIG[BC_PlayerName] == nil) then
+      print("player profile is nil, create default");
       BUFFCOUNT_CONFIG[BC_PlayerName] = BC_DEFAULT;
    end;
 
@@ -187,27 +190,25 @@ function UpdateLock()
    BuffCountWindow:EnableMouse(not BUFFCOUNT_CONFIG[BC_PlayerName].FRAMELOCK);
 end;
 
-function BuffCount_OnEvent()
+function BuffCount_OnEvent(event)
    if (event == "UNIT_AURA") then
-      local unit = select(1, event);
-      if unit == "player" then 
-	 Count_Buffs();
-      end;
-   elseif (event == "VARIABLES_LOADED") then
-      BuffCount_Init();
+		Count_Buffs();
+   elseif (event == "ADDON_LOADED") then
+		BuffCount_Init();
    end;
 end
 
 
 function Count_Buffs()
    local count = 0;
-   local i = 0;
+   local i = 1;
 
    -- count buffs
    while UnitBuff("player", i) do
       i = i + 1;
    end;
-   count = i;
+   count = i - 1;
+   print(count);
 
    -- count debuffs that takes buff slot, such as Death Wish
    i = 0;
@@ -215,7 +216,7 @@ function Count_Buffs()
    while debuff do
       local debuff_name = select(1, debuff);
       if ValidDebuff.debuff_name then
-	 count = count + 1;
+		count = count + 1;
       end;
       i = i + 1;
       debuff = UnitDebuff("player", i);

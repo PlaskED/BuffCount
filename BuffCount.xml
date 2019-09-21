@@ -1,13 +1,13 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="BuffCount.lua"/>
-	<Frame name="BuffCountFrame" hidden="true">
+	<Frame name="BuffCountFrame" hidden="false">
 		<Scripts>
 			<OnLoad>
 				BuffCount_OnLoad();
 			</OnLoad>
 			<OnEvent>
-				BuffCount_OnEvent();
+				BuffCount_OnEvent(event);
 			</OnEvent>
 			<OnDragStart>
 				self:StartMoving();
