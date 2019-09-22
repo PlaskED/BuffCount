@@ -1,13 +1,31 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-	<Frame name="BuffCountWindow" toplevel="true" movable="true" parent="UIParent" enableMouse="true" hidden="true">
-		<TitleRegion setAllPoints="true"/>
+	<Frame name="BuffCountWindow" movable="true" enableMouse="true">
+	    <!-- Tags below connects the frame to the lua functions -->
+		<Script file="BuffCount.lua"/>
+		<Scripts>
+			<OnLoad>
+				BuffCount_OnLoad();
+				self:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnEvent>
+				BuffCount_OnEvent(event, ...);
+			</OnEvent>
+			<OnDragStart>
+				BuffCount_MoveWindow(self);
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+		<!-- Tags below adds the window visuals to the frame -->
+		
 		<Size>
 			<AbsDimension x="55" y="40" />
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" />
+			<Anchor point="CENTER" relativeTo="UIParent"/>
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background">
 			 <Color a="0.25" r="1" g="1" b="1" />
@@ -16,23 +34,18 @@
 			</EdgeSize>
 		</Backdrop>
 		
+		<!-- Tags below adds the visuals for the text in window -->
 		<Layers>
-			<Layer level="ARTWORK">
-				
-				<FontString name="BuffCountText" text="buffs" font = "FONTS\ARIALN.TTF">
+			<Layer level="ARTWORK">	
+				<FontString name="BuffCountText" text="buffs" font="FONTS\ARIALN.TTF">
 				    <FontHeight>
 						<AbsValue val="30"/>
 					</FontHeight>
 					<Anchors>
-						<Anchor point="CENTER" relativeTo="BuffCountWindow">
-							<Offset>
-								<AbsDimension x="0" y="0" />
-							</Offset>
-						</Anchor>
+						<Anchor point="CENTER" relativeTo="BuffCountWindow"/>
 					</Anchors>
 				</FontString>				
 			</Layer>	
-		
 		</Layers>
 	</Frame>
 </Ui>

@@ -20,10 +20,9 @@ local BuffCap = 32;
 local HiddenBuffs = 0;
 local ValidDebuff = { ["DeathWish"] = true, };
 
-function BuffCount_OnLoad(self)
-	print("BuffCount_OnLoad() start");
-	BuffCountFrame:RegisterUnitEvent("UNIT_AURA","player");
-	BuffCountFrame:RegisterEvent("ADDON_LOADED","BuffCount");
+function BuffCount_OnLoad()
+	BuffCountWindow:RegisterUnitEvent("UNIT_AURA","player");
+	BuffCountWindow:RegisterEvent("ADDON_LOADED");
 	SLASH_BC1 = '/bc';
 	local function handler(msg, editbox)
 	local cmd, arg, arg1, arg2, arg3 = strsplit(" ",msg)
@@ -103,28 +102,28 @@ function BuffCount_OnLoad(self)
    end;
    
    SlashCmdList["BC"] = handler;
-   print("BuffCount_OnLoad() end");
 end
 
 
 function BuffCount_Init()
-   BC_PlayerName = UnitName("player").." of "..GetCVar("realmName");
-
-   local _,class = UnitClass("player");
+	Count_Buffs();
+	local name,_ = UnitName("player");
+	local realm = GetRealmName();
+    BC_PlayerName = name.." of "..realm;
+    local _,class = UnitClass("player");
+	
    -- Warrior stances counts as buffs
    if class == "WARRIOR" then
-      HiddenBuffs = 1;
+		HiddenBuffs = 1;
    end;
    
    DEFAULT_CHAT_FRAME:AddMessage('Buff Counter v1.3, by Plask. Use /bc for available commands', 0.35, 1, 0.35);
    
    if (BUFFCOUNT_CONFIG == nil) then
-	  print("config is nil, create empty");
       BUFFCOUNT_CONFIG = {};
    end;
    
    if (BUFFCOUNT_CONFIG[BC_PlayerName] == nil) then
-      print("player profile is nil, create default");
       BUFFCOUNT_CONFIG[BC_PlayerName] = BC_DEFAULT;
    end;
 
@@ -149,8 +148,8 @@ function BuffCount_UpdateConfiguration()
    local bgsize = BUFFCOUNT_CONFIG[BC_PlayerName].BG_SIZE;
    local x, y = bgsize.x, bgsize.y;
    BuffCountWindow:SetSize(x, y);
-   UpdateLock();
    UpdateVisibility();
+	  
    -- TODO: Save position in config?
 end;
 
@@ -175,7 +174,6 @@ function BuffCount_ChangeLock()
       BUFFCOUNT_CONFIG[BC_PlayerName].FRAMELOCK = true;
       DEFAULT_CHAT_FRAME:AddMessage("BuffCount: Window is now locked.", 0.35, 1, 0.35);
    end;
-   UpdateLock();
 end
 
 function UpdateVisibility()
@@ -186,15 +184,20 @@ function UpdateVisibility()
    end;
 end;
 
-function UpdateLock()
-   BuffCountWindow:EnableMouse(not BUFFCOUNT_CONFIG[BC_PlayerName].FRAMELOCK);
+function BuffCount_MoveWindow(self)
+	if not BUFFCOUNT_CONFIG[BC_PlayerName].FRAMELOCK then
+		self:StartMoving();
+	end;
 end;
 
-function BuffCount_OnEvent(event)
+function BuffCount_OnEvent(event, ...)
    if (event == "UNIT_AURA") then
 		Count_Buffs();
    elseif (event == "ADDON_LOADED") then
-		BuffCount_Init();
+		local addonName = ...;
+		if (addonName == "BuffCount") then
+			BuffCount_Init();
+		end;
    end;
 end
 
@@ -208,10 +211,9 @@ function Count_Buffs()
       i = i + 1;
    end;
    count = i - 1;
-   print(count);
 
    -- count debuffs that takes buff slot, such as Death Wish
-   i = 0;
+   i = 1;
    local debuff = UnitDebuff("player", i);
    while debuff do
       local debuff_name = select(1, debuff);

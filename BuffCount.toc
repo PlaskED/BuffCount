@@ -5,5 +5,4 @@
 ## SavedVariables: BUFFCOUNT_CONFIG
 ## Notes: Counts and shows your amount of buffs
 BuffCount.lua
-BuffCount.xml
 BuffCountWindow.xml
