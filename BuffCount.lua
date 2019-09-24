@@ -137,7 +137,7 @@ function BuffCount_UpdateConfiguration()
    BuffCountText:SetTextColor(r, g, b);
    local x = BUFFCOUNT_CONFIG[BC_PlayerName].FONT_SIZE;
    BuffCountText:SetTextHeight(x);
-   local font = BC_FONT.BUFFCOUNT_CONFIG[BC_PlayerName].FONT_FAMILY;
+   local font = BUFFCOUNT_CONFIG[BC_PlayerName].FONT_FAMILY;
    BuffCountText:SetFont(font, x);
    
    --  BuffCountText:SetSize(x, y);
