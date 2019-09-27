@@ -4,5 +4,6 @@
 ## Author: Plask
 ## SavedVariables: BUFFCOUNT_CONFIG
 ## Notes: Counts and shows your amount of buffs
+BuffCountGlobals.lua
 BuffCount.lua
 BuffCountWindow.xml
