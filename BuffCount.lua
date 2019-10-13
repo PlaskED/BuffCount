@@ -1,10 +1,12 @@
 local BC = BC_Globals;
 local BC_PlayerName = nil;
 local HiddenBuffs = 0;
+local ActiveEnchants = 0;
 
 function BuffCount_OnLoad()
 	BuffCountWindow:RegisterUnitEvent("UNIT_AURA","player");
 	BuffCountWindow:RegisterEvent("ADDON_LOADED");
+	BuffCountWindow:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
 	SLASH_BC1 = '/bc';
 	
 	local function handler(msg, editbox)
@@ -117,7 +119,8 @@ function BuffCount_Init()
    end;
 
    BuffCount_UpdateConfiguration();
-   	Count_Buffs();	
+   CountEnchants();
+   CountBuffs();
 end
 
 function BuffCount_UpdateConfiguration()
@@ -182,7 +185,12 @@ end;
 
 function BuffCount_OnEvent(event, ...)
    if (event == "UNIT_AURA") then
-		Count_Buffs();
+		CountBuffs();
+   elseif (event == "PLAYER_EQUIPMENT_CHANGED") then
+		slotId,_ = ...;
+		if BC.BC_ENCHANT[slotId] then
+			CountEnchants();
+		end;
    elseif (event == "ADDON_LOADED") then
 		local addonName = ...;
 		if (addonName == "BuffCount") then
@@ -191,8 +199,29 @@ function BuffCount_OnEvent(event, ...)
    end;
 end
 
+function CountEnchants()
+   local numEnchants = 0;
+   print("CountEnchants");
+   for _,v in pairs(BC.BC_ENCHANT) do
+		local slot = GetInventorySlotInfo(v);
+		local link = GetInventoryItemLink("player", slot);
+		print("link: "..link);
+		if link then
+			local itemId, enchantId, gem1, gem2, gem3, gem4 = link:match("item:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+)");
+			print(itemId);
+			print(enchantId);
+			print(gem1);
+			if enchantId then
+				DEFAULT_CHAT_FRAME:AddMessage("Found enchant on slot: "..i, 1, 0.75, 0.5);
+				numEnchants = numEnchants + 1;
+			 end;
+		end;
+	end;
+   DEFAULT_CHAT_FRAME:AddMessage("BC enchants: "..numEnchants, 1, 0.75, 0.5);
+   ActiveEnchants = numEnchants;
+end
 
-function Count_Buffs()
+function CountBuffs()
    local count = 0;
    local i = 1;
 

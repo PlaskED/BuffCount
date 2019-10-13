@@ -22,3 +22,28 @@ BC.BC_DEFAULT = {
 	   FONT_SIZE = 30,
 	   FONT_FAMILY = BC.BC_FONT["arial"],
 	};
+
+BC.BC_ENCHANT = {
+		[1]="HeadSlot",
+		[3]="ShoulderSlot",
+		[15]="BackSlot",
+		[5]="ChestSlot",
+		[9]="WristSlot",
+		[10]="HandsSlot",
+		[7]="LegsSlot",
+		[8]="FeetSlot",
+		[16]="MainHandSlot",
+		[17]="SecondaryHandSlot",
+		[18]="RangedSlot"
+	};
+--1 = head
+--3 = shoulder
+--5 = chest
+--7 = legs
+--8 = feet
+--9 = wrist
+--10 = hands
+--15 = back
+--16 = main hand
+--17 = off hand
+--18 = ranged
