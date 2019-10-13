@@ -119,7 +119,7 @@ function BuffCount_Init()
    end;
 
    BuffCount_UpdateConfiguration();
-   CountEnchants();
+   CountAllEnchants();
    CountBuffs();
 end
 
@@ -189,7 +189,7 @@ function BuffCount_OnEvent(event, ...)
    elseif (event == "PLAYER_EQUIPMENT_CHANGED") then
 		slotId,_ = ...;
 		if BC.BC_ENCHANT[slotId] then
-			CountEnchants();
+			CountAllEnchants();
 		end;
    elseif (event == "ADDON_LOADED") then
 		local addonName = ...;
@@ -199,23 +199,18 @@ function BuffCount_OnEvent(event, ...)
    end;
 end
 
-function CountEnchants()
+function CountAllEnchants()
    local numEnchants = 0;
-   print("CountEnchants");
    for _,v in pairs(BC.BC_ENCHANT) do
 		local slot = GetInventorySlotInfo(v);
 		local link = GetInventoryItemLink("player", slot);
-		print("link: "..link);
 		if link then
 			local _,_,enchant=strsplit(":",link);
-			print(enchant);
-			if enchant then
-				DEFAULT_CHAT_FRAME:AddMessage("Found enchant on slot: "..enchant, 1, 0.75, 0.5);
+			if enchant ~= "" then
 				numEnchants = numEnchants + 1;
 			 end;
 		end;
 	end;
-   DEFAULT_CHAT_FRAME:AddMessage("BC enchants: "..numEnchants, 1, 0.75, 0.5);
    ActiveEnchants = numEnchants;
 end
 
@@ -241,7 +236,7 @@ function CountBuffs()
       i = i + 1;
       debuff = UnitDebuff("player", i);
    end;
-   count = count + HiddenBuffs;
+   count = count + HiddenBuffs + ActiveEnchants;
    Update_Window(count);
 end;
 
