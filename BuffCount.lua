@@ -207,12 +207,10 @@ function CountEnchants()
 		local link = GetInventoryItemLink("player", slot);
 		print("link: "..link);
 		if link then
-			local itemId, enchantId, gem1, gem2, gem3, gem4 = link:match("item:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+)");
-			print(itemId);
-			print(enchantId);
-			print(gem1);
-			if enchantId then
-				DEFAULT_CHAT_FRAME:AddMessage("Found enchant on slot: "..i, 1, 0.75, 0.5);
+			local _,_,enchant=strsplit(":",link);
+			print(enchant);
+			if enchant then
+				DEFAULT_CHAT_FRAME:AddMessage("Found enchant on slot: "..enchant, 1, 0.75, 0.5);
 				numEnchants = numEnchants + 1;
 			 end;
 		end;
