@@ -17,7 +17,7 @@ Toggle locking/unlocking of the BuffCount window
 ```
 Reset all settings
 ```
-\bc rest
+\bc reset
 ```
 Configure BuffCount window
 ```
