@@ -26,24 +26,32 @@ BC.BC_DEFAULT = {
 BC.BC_ENCHANT = {
 		[1]="HeadSlot",
 		[3]="ShoulderSlot",
-		[15]="BackSlot",
-		[5]="ChestSlot",
-		[9]="WristSlot",
-		[10]="HandsSlot",
 		[7]="LegsSlot",
 		[8]="FeetSlot",
 		[16]="MainHandSlot",
 		[17]="SecondaryHandSlot",
-		[18]="RangedSlot"
+		[18]="RangedSlot",
 	};
---1 = head
---3 = shoulder
---5 = chest
---7 = legs
---8 = feet
---9 = wrist
---10 = hands
---15 = back
---16 = main hand
---17 = off hand
---18 = ranged
+--	[15]="BackSlot",
+--	[5]="ChestSlot",
+--	[9]="WristSlot",
+--	[10]="HandsSlot",
+BC.BC_VALID_ENCHANT = {
+		[1]={2543, 2544, 2545, 1506, 1507, 1508, 1509, 1510, 1503, 1505, 1483, 1504, 2591, 2585, 2586, 2589, 2583, 2588, 2590, 2584, 2587, 2681},
+		[3]={2721, 2715, 2717, 2716, 2488, 2485, 2483, 2484, 2486, 2487},
+		[7]={2543, 2544, 2545, 1506, 1507, 1508, 1509, 1510, 1503, 1505, 1483, 1504, 2591, 2585, 2586, 2589, 2583, 2588, 2590, 2584, 2587, 2681},
+		[8]={464},
+		[16]={36},
+		[17]={36},
+		[18]={2525, 664}
+	};
+--	arcanum of rapidity/focus/protection (2543, 2544, 2545)
+--	lesser arcanum 8str/8sta/8agi/8int/8spi/100hp/20FR/150MP/125Armor (1506, 1507, 1508, 1509, 1510, 1503, 1505, 1483, 1504)
+--	ZG druid/rogue/hunter/warlock/warrior/mage/priest/paladin/shaman, savage guard (2591, 2585, 2586, 2589, 2583, 2588, 2590, 2584, 2587, 2681)
+--	Power/Resilience/Might/Fortitude of the Scourge (2721, 2715, 2717, 2716)
+--	Chromatic/Arcane/Flame/Frost/Nature/Shadow mantle of the dawn (2488, 2485, 2483, 2484, 2486, 2487)
+--	mithril spurs (464)
+--	fiery blaze (36)
+--	bizznicks, sniper scope(2525, 664)
+		
+

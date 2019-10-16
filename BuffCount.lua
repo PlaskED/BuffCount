@@ -201,14 +201,20 @@ end
 
 function CountAllEnchants()
    local numEnchants = 0;
-   for _,v in pairs(BC.BC_ENCHANT) do
+   for k,v in pairs(BC.BC_ENCHANT) do
 		local slot = GetInventorySlotInfo(v);
 		local link = GetInventoryItemLink("player", slot);
 		if link then
 			local _,_,enchant=strsplit(":",link);
-			if enchant ~= "" then
-				numEnchants = numEnchants + 1;
-			 end;
+			if enchant ~= "" then 
+				enchant = tonumber(enchant);
+				for _, i in ipairs(BC.BC_VALID_ENCHANT[k]) do
+					if enchant == i then
+						numEnchants = numEnchants + 1;
+						break;
+					end;
+				end;
+			end;
 		end;
 	end;
    ActiveEnchants = numEnchants;
